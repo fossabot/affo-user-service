@@ -1,0 +1,21 @@
+[default]
+DEBUG = true
+
+CACHE_TYPE = "redis"
+CACHE_REDIS_URL = "redis://redis:6379/0"
+
+ADMIN_EMAIL = "admin@example.com"
+ADMIN_PASSWORD = "password"
+
+SERVICE_EMAIL = "service@example.com"
+SERVICE_PASSWORD = "password"
+
+SMS_API_ROOT_URL = "http://sms.example.com/api/v1.0/"
+EMAIL_API_ROOT_URL = "http://email.example.com/api/v1.0/"
+
+[development]
+DATABASE_URI = "sqlite://"
+CACHE_TYPE = "simple"
+
+[production]
+DEBUG = false

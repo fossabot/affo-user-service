@@ -1,0 +1,6 @@
+class VerificationError(Exception):
+    ...
+
+
+class InvalidPhone(VerificationError):
+    ...

@@ -1,0 +1,510 @@
+openapi: 3.0.0
+info:
+  title: Investex User Service API
+  version: 1.0.0
+
+paths:
+  /auth/login/:
+    post:
+      tags:
+        - auth
+      summary: Issues JWT token for the registered user from an email and a password
+      operationId: affo_user_service.api.auth.login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: login
+              $ref: '#/components/schemas/Login'
+        description: The credentials to login.
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+
+  /auth/refresh/:
+    post:
+      tags:
+        - auth
+      summary: Refresh JWT token
+      operationId: affo_user_service.api.auth.refresh
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+
+  /auth/logout/:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - auth
+      summary: Adds the specified JWT token into the blacklist
+      operationId: affo_user_service.api.auth.logout
+      responses:
+        '204':
+          description: Success
+
+  /auth/verify_token/:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - auth
+      summary: Verify JWT token
+      operationId: affo_user_service.api.auth.verify_token
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenData'
+
+  /user/:
+    post:
+      tags:
+        - user
+      summary: Register a new user
+      operationId: affo_user_service.api.user.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: user
+              $ref: '#/components/schemas/RegisterUser'
+        description: The user to create.
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterUserWithID'
+
+  /user/{user_id}/role/:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      summary: Retrieves a user roles by an identifier.
+      operationId: affo_user_service.api.role.get
+      parameters:
+        - $ref: '#/components/parameters/UserID'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      summary: Update user roles by an identifier.
+      operationId: affo_user_service.api.role.update
+      parameters:
+        - $ref: '#/components/parameters/UserID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: roles
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /user/{user_id}/set_password/:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      summary: Set a user password
+      operationId: affo_user_service.api.user.set_password
+      parameters:
+        - $ref: '#/components/parameters/UserID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: password
+              $ref: '#/components/schemas/Password'
+        description: A password
+        required: true
+      responses:
+        '200':
+          description: Success
+
+  /user/{user_id}/:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      summary: Retrieves a user by an identifier.
+      operationId: affo_user_service.api.user.get
+      parameters:
+        - $ref: '#/components/parameters/UserID'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithID'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      summary: Update a user by an identifier
+      operationId: affo_user_service.api.user.update
+      parameters:
+        - $ref: '#/components/parameters/UserID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: user1
+              $ref: '#/components/schemas/User'
+        description: The user to update
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithID'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      summary: Delete a user by an identifier
+      operationId: affo_user_service.api.user.delete
+      parameters:
+        - $ref: '#/components/parameters/UserID'
+      responses:
+        '204':
+          description: Success
+
+  /password/reset/:
+    post:
+      tags:
+        - password
+      summary: Reset a user password
+      operationId: affo_user_service.api.password.reset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: password_reset
+              $ref: '#/components/schemas/PasswordReset'
+      responses:
+        '200':
+          description: Success
+
+  /password/reset/confirm/:
+    post:
+      tags:
+        - password
+      summary: Confirm a user password reset
+      operationId: affo_user_service.api.password.reset_confirm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: password_reset_confirm
+              $ref: '#/components/schemas/PasswordResetConfirm'
+      responses:
+        '200':
+          description: Success
+
+  /verification/phone/:
+    post:
+      tags:
+        - verification
+      summary: Verify a phone
+      operationId: affo_user_service.api.verification.phone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: phone
+              $ref: '#/components/schemas/Phone'
+      responses:
+        '200':
+          description: Success
+
+  /verification/phone/confirm/:
+    post:
+      tags:
+        - verification
+      summary: Confirm a phone verification
+      operationId: affo_user_service.api.verification.phone_confirm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: phone_confirm
+              $ref: '#/components/schemas/PhoneConfirm'
+      responses:
+        '200':
+          description: Success
+
+servers:
+  - url: /api/v1.0
+
+components:
+  parameters:
+    UserID:
+      in: path
+      name: user_id
+      required: true
+      description: A user identifier
+      schema:
+        type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: affo_user_service.utils.jwt_decode_token
+
+  schemas:
+    Login:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: An e-mail
+        password:
+          type: string
+          description: Password
+
+    User:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: An e-mail
+        phone:
+          type: string
+          description: A phone
+          example: '12345678901'
+          x-nullable: true
+        first_name:
+          type: string
+          description: A first name
+          example: Chin
+          x-nullable: true
+        last_name:
+          type: string
+          description: A first name
+          example: Sang
+          x-nullable: true
+
+    UserWithID:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          required:
+            - id
+            - email
+            - phone
+            - first_name
+            - last_name
+            - is_active
+            - last_login
+            - roles
+            - updated_at
+            - created_at
+          properties:
+            id:
+              type: integer
+              description: A user identifier
+            is_active:
+              type: boolean
+              description: Designates whether this user account should be considered active.
+            last_login:
+              type: string
+              format: date-time
+              description: A date the user was logged in the last time
+            roles:
+              type: array
+              items:
+                type: string
+              description: A list of user roles
+            updated_at:
+              type: string
+              format: date-time
+              description: A date the user was updated
+            created_at:
+              type: string
+              format: date-time
+              description: A date the user was registered
+
+    RegisterUser:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          required:
+            - email
+          properties:
+            password:
+              type: string
+              description: Password
+              x-nullable: true
+
+    RegisterUserWithID:
+      allOf:
+        - $ref: '#/components/schemas/UserWithID'
+        - type: object
+          required:
+            - id
+            - email
+            - phone
+            - first_name
+            - last_name
+            - is_active
+            - last_login
+            - roles
+            - updated_at
+            - created_at
+            - access_token
+          properties:
+            access_token:
+              type: string
+              description: A JWT access token
+
+    Token:
+      type: object
+      required:
+        - access_token
+      properties:
+        access_token:
+          type: string
+          description: A JWT access token
+
+    Password:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          description: A password
+
+    PasswordReset:
+      type: object
+      required:
+        - email
+        - url_template
+      properties:
+        email:
+          type: string
+          description: An email of the user to restore a password
+        url_template:
+          type: string
+          description: An URL which contains `{token}` sequence. `{token}` will be replaced with a personal user token to confirm a user identity.
+
+    PasswordResetConfirm:
+      type: object
+      required:
+        - token
+        - new_password
+      properties:
+        token:
+          type: string
+          description: A reset password token
+        new_password:
+          type: string
+          description: A new password.
+
+    Phone:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+          description: A phone
+        resend:
+          type: boolean
+          description: Resend a code
+          x-nullable: true
+
+    PhoneConfirm:
+      type: object
+      required:
+        - phone
+        - code
+      properties:
+        phone:
+          type: string
+          description: A phone
+        code:
+          type: string
+          description: A confirmation code
+
+    TokenData:
+      type: object
+      required:
+        - iat
+        - exp
+        - rf_exp
+        - jti
+        - id
+        - rls
+      properties:
+        iat:
+          type: integer
+          description: Issued at
+        exp:
+          type: integer
+          description: Expiration time
+        rf_exp:
+          type: integer
+          description: Refresh token expiration time
+        jti:
+          type: string
+          description: JWT ID
+        id:
+          type: integer
+          description: A user identifier
+        rls:
+          type: string
+          description: A comma-separated list of user roles
