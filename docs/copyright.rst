@@ -18,7 +18,7 @@ a license compatible to this one.
 
 .. note::
 
-   While the *AFFO SMS Service* documentation is offered under the
+   While the *AFFO User Service* documentation is offered under the
    Creative Commons *Attribution-ShareAlike 4.0 International* license
-   the AFFO SMS Service *software* is offered under the
+   the AFFO User Service *software* is offered under the
    `BSD License (3 Clause) <http://www.opensource.org/licenses/BSD-3-Clause>`_
