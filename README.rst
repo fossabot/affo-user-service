@@ -4,7 +4,7 @@ AFFO User Service
 =================
 
 ============ =============================================
-**Version**  1.0.2
+**Version**  1.0.3.dev
 **Web**      https://affo.io/
 **Download** https://pypi.org/affoio/affo-user-service/
 **Source**   https://github.com/affoio/affo-user-service/
